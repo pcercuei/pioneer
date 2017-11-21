@@ -1,0 +1,38 @@
+name: pioneer
+version: "20171121"
+summary: Pioneer Space Simulator
+description: Pioneer Space Simulator
+type: app
+grade: devel
+confinement: strict
+
+apps:
+  pioneer:
+    command: pioneer
+    plugs:
+      - home
+      - x11
+      - mir
+      - wayland
+      - opengl
+      - pulseaudio
+      - joystick
+
+parts:
+  pioneer:
+    source: .
+    plugin: cmake
+    configflags:
+      - -DPIONEER_DATA_DIR:PATH=/snap/pioneer/current/share/pioneer/data
+      - -DCMAKE_BUILD_TYPE:STRING=Release
+      - -DUSE_SYSTEM_LIBLUA:BOOL=ON
+    build-packages:
+      - libpng-dev
+      - libfreetype6-dev
+      - libassimp-dev
+      - libsdl2-dev
+      - libsdl2-image-dev
+      - libsigc++-2.0-dev
+      - libvorbis-dev
+      - liblua5.2-dev
+      - mesa-common-dev
