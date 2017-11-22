@@ -1,0 +1,19 @@
+clone_depth: 1
+
+configuration: Release
+
+install:
+    #    - echo "Downloading dependencies"
+    #    - choco install InnoSetup
+    #    - set PATH=%PATH%;"C:\Program Files (x86)\Inno Setup 5"
+
+    - "appveyor DownloadFile -FileName C:\\pioneer-deps.zip https://ci.appveyor.com/api/projects/pcercuei/pioneer-libs/artifacts/pioneer-deps.zip?job=Environment%3A%20PLATFORM%3Dx64%2C%20CMAKE_EXTRA_ARGS%3D-DCMAKE_GENERATOR_TOOLSET%3D%22host%3Dx64%22"
+    - cd C:\Program Files\
+    - 7z x -y C:\pioneer-deps.zip
+
+    - C:\msys64\usr\bin\bash -l CI\appveyor\prepare.sh
+
+build_script:
+    - cd C:\projects\pioneer
+    - cmake -G "Visual Studio 15 Win64" -DCMAKE_FIND_ROOT_PATH="C:" -DCMAKE_INSTALL_PREFIX="C:\Program Files\Pioneer" -DCMAKE_BUILD_TYPE:STRING=%CONFIGURATION% -DGIT_EXECUTABLE:FILEPATH="C:/Program Files/Git/cmd/git.exe" .
+    - cmake --build . --config %CONFIGURATION% --target INSTALL
