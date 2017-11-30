@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Pioneer
+Comment=A game of lonely space adventure
+Exec=@CMAKE_INSTALL_FULL_BINDIR@/pioneer
+StartupNotify=false
+Terminal=false
+Type=Application
+Icon=@CMAKE_INSTALL_FULL_DATADIR@/icons/hicolor/scalable/apps/pioneer.svg
+Categories=Game;AdventureGame;ActionGame;Simulation;

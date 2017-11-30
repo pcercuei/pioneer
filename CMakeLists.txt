@@ -165,6 +165,17 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 	CXX_EXTENSIONS ON
 )
 
+configure_file(pioneer.desktop.cmakein
+	${CMAKE_CURRENT_BINARY_DIR}/pioneer.desktop
+	@ONLY
+)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pioneer.desktop
+	DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
+)
+install(FILES application-icon/badge-notext-extrastars.svg
+	DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps
+	RENAME pioneer.svg
+)
 install(TARGETS ${PROJECT_NAME}
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
