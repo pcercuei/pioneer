@@ -3,6 +3,32 @@ project(pioneer LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+if (MSVC)
+	set(THIRDPARTY_PATH "${CMAKE_SOURCE_DIR}/../pioneer-thirdparty" CACHE PATH
+		"Where to find the third-party dependencies directory" FORCE
+	)
+
+	if (MSVC_VERSION EQUAL 1900)
+		set(VS_PATH vs2015)
+	elseif (MSVC_VERSION LESS 1900)
+		message(SEND_ERROR "VisualStudio 2015 or 2017 are required.")
+	else()
+		set(VS_PATH vs2017)
+	endif()
+
+	if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+		set(VS_ARCH x64)
+	else()
+		set(VS_ARCH x32)
+	endif()
+
+	set(THIRDPARTY_INCLUDE_PATH "${THIRDPARTY_PATH}/win32/include")
+	set(THIRDPARTY_LIBRARY_PATH "${THIRDPARTY_PATH}/win32/lib/${VS_ARCH}/${VS_PATH}")
+
+	list(APPEND CMAKE_INCLUDE_PATH ${THIRDPARTY_INCLUDE_PATH})
+	list(APPEND CMAKE_LIBRARY_PATH ${THIRDPARTY_LIBRARY_PATH})
+endif(MSVC)
+
 include(GNUInstallDirs)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
@@ -99,14 +125,16 @@ endif (USE_SYSTEM_LIBLUA)
 
 find_package(Freetype REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(PkgConfig REQUIRED)
-find_package(PNG REQUIRED)
 find_package(SDL2 REQUIRED)
 
-pkg_check_modules(ASSIMP REQUIRED assimp)
-pkg_check_modules(SDL2_IMAGE REQUIRED SDL2_image)
-pkg_check_modules(SIGCPP REQUIRED sigc++-2.0)
-pkg_check_modules(VORBISFILE REQUIRED vorbisfile)
+if (NOT MSVC)
+	find_package(PkgConfig REQUIRED)
+
+	pkg_check_modules(ASSIMP REQUIRED assimp)
+	pkg_check_modules(SDL2_IMAGE REQUIRED SDL2_image)
+	pkg_check_modules(SIGCPP REQUIRED sigc++-2.0)
+	pkg_check_modules(VORBISFILE REQUIRED vorbisfile)
+endif(NOT MSVC)
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/contrib
@@ -114,7 +142,6 @@ include_directories(
 	${ASSIMP_INCLUDE_DIRS}
 	${FREETYPE_INCLUDE_DIRS}
 	${OPENGL_INCLUDE_DIRS}
-	${PNG_INCLUDE_DIRS}
 	${SDL2_INCLUDE_DIRS}
 	${SDL2_IMAGE_INCLUDE_DIRS}
 	${SIGCPP_INCLUDE_DIRS}
@@ -141,7 +168,6 @@ target_link_libraries(${PROJECT_NAME} LINK_PRIVATE
 	${ASSIMP_LIBRARIES}
 	${FREETYPE_LIBRARIES}
 	${OPENGL_LIBRARIES}
-	${PNG_LIBRARIES}
 	${SDL2_LIBRARIES}
 	${SDL2_IMAGE_LIBRARIES}
 	${SIGCPP_LIBRARIES}
@@ -154,6 +180,12 @@ target_link_libraries(${PROJECT_NAME} LINK_PRIVATE
 	picodds
 	profiler
 )
+
+if (MSVC)
+	# Link with all the .lib files in the third-party directory
+	file(GLOB lib_files ${THIRDPARTY_LIBRARY_PATH}/*.lib)
+	target_link_libraries(${PROJECT_NAME} LINK_PRIVATE ${lib_files})
+endif (MSVC)
 
 if (WIN32)
 	target_link_libraries(${PROJECT_NAME} LINK_PRIVATE shlwapi)
