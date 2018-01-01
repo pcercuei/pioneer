@@ -19,7 +19,7 @@ if (MSVC)
 	if (CMAKE_SIZEOF_VOID_P EQUAL 8)
 		set(VS_ARCH x64)
 	else()
-		set(VS_ARCH x32)
+		set(VS_ARCH x86)
 	endif()
 
 	set(THIRDPARTY_INCLUDE_PATH "${THIRDPARTY_PATH}/win32/include")
@@ -27,6 +27,18 @@ if (MSVC)
 
 	list(APPEND CMAKE_INCLUDE_PATH ${THIRDPARTY_INCLUDE_PATH})
 	list(APPEND CMAKE_LIBRARY_PATH ${THIRDPARTY_LIBRARY_PATH})
+
+	set(CMAKE_FIND_LIBRARY_PREFIXES "lib" "")
+	set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" "_static.lib")
+
+	message(STATUS "Include path: ${THIRDPARTY_INCLUDE_PATH}")
+	message(STATUS "Library path: ${THIRDPARTY_LIBRARY_PATH}")
+
+	# Avoid annoying warnings from Visual Studio
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS=1)
+
+	# Allow M_PI / M_E to be used
+	add_definitions(-D_USE_MATH_DEFINES=1)
 endif(MSVC)
 
 include(GNUInstallDirs)
@@ -125,7 +137,10 @@ endif (USE_SYSTEM_LIBLUA)
 
 find_package(Freetype REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(SDL2 REQUIRED)
+
+find_library(SDL2_LIBRARIES SDL2)
+find_library(SDL2_IMAGE_LIBRARIES SDL2_image)
+find_path(SDL2_INCLUDE_DIRS SDL.h PATH_SUFFIXES SDL2)
 
 if (NOT MSVC)
 	find_package(PkgConfig REQUIRED)

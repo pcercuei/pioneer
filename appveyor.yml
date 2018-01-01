@@ -1,16 +1,19 @@
 clone_depth: 1
 image: Visual Studio 2017
-platform: x64
 configuration: Release
+platform:
+    - x86
+    - x64
 
 install:
     - cd C:\projects
     - git clone -q --depth 1 https://github.com/pioneerspacesim/pioneer-thirdparty.git
-    - cd C:\projects\pioneer-thirdparty\win32\lib\x64\vs2017
+    - cd C:\projects\pioneer-thirdparty\win32\lib\%PLATFORM%\vs2017
     - rename freetype271MT.lib freetype.lib
+    - xcopy /e /i C:\projects\pioneer-thirdparty\source\libsigc++-2.3.1\sigc++ C:\projects\pioneer-thirdparty\win32\include\sigc++
 
 build_script:
     - cd C:\projects\pioneer
 
-    - cmake -DCMAKE_BUILD_TYPE:STRING=Release .
-    - cmake --build . --config Release
+    - cmake -DCMAKE_BUILD_TYPE:STRING=%CONFIGURATION% .
+    - cmake --build . --config %CONFIGURATION%
