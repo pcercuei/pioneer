@@ -53,7 +53,11 @@ Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
-Source: "@CMAKE_INSTALL_PREFIX@\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
+Source: "C:\ìnstall64\Pioneer\pioneer"; DestDir: "{app}"; Check: Is64BitInstallMode
+Source: "C:\ìnstall64\Pioneer\*.dll"; DestDir: "{app}"; Check: Is64BitInstallMode
+Source: "C:\install64\Pioneer\data\*"; DestDir: "{app}\data"; Flags: recursesubdirs createallsubdirs
+Source: "C:\ìnstall32\Pioneer\pioneer"; DestDir: "{app}"; Check: not Is64BitInstallMode
+Source: "C:\ìnstall32\Pioneer\*.dll"; DestDir: "{app}"; Check: not Is64BitInstallMode
 
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"

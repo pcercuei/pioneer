@@ -15,4 +15,14 @@ export PATH=/mingw64/bin:$PATH
 	mingw-w64-x86_64-glew \
 	mingw-w64-x86_64-libvorbis \
 	mingw-w64-x86_64-libpng \
-	mingw-w64-x86_64-libsigc++
+	mingw-w64-x86_64-libsigc++ \
+	\
+	mingw-w64-i686-cmake \
+	mingw-w64-i686-SDL2 \
+	mingw-w64-i686-SDL2_image \
+	mingw-w64-i686-assimp \
+	mingw-w64-i686-freetype \
+	mingw-w64-i686-glew \
+	mingw-w64-i686-libvorbis \
+	mingw-w64-i686-libpng \
+	mingw-w64-i686-libsigc++
